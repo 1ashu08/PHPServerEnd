@@ -104,6 +104,99 @@
 		}        
 		$conn->close();	
 	}
+	function listUser()
+	{
+		$conn=databaseConnect();	
+	
+		$sql = "SELECT * FROM UserMasterRecord";
+		$result = $conn->query($sql);
+		$stack = array();
+	
+
+		if ($result->num_rows > 0) {
+	
+			while($row = $result->fetch_assoc()) {
+				$data=$row["registration_number"]."+".$row["CollegeId"]."+".$row["college_address"]."+".$row["user_address"]."+".$row["registration_year"]."+".$row["present_academic_year"]."+".$row["branch"]."+".$row["type"]."+".$row["user_id"]."+".$row["password"];
+				array_push($stack,$data);		
+			}
+		
+			$conn->close();	
+			echo $stack;
+		} 
+		else {
+			echo "0 results";
+		}
+	}
+	function getAllUserName()
+	{
+		$conn=databaseConnect();	
+	
+		$sql = "SELECT user_id FROM UserMasterRecord";
+		$result = $conn->query($sql);
+		$stack = array();
+	
+
+		if ($result->num_rows > 0) {
+	
+			while($row = $result->fetch_assoc()) {
+				$data=$row["user_id"];
+				array_push($stack,$data);		
+			}
+		
+			$conn->close();	
+			echo $stack;
+		} 
+		else {
+			echo "0 results";
+		}
+	}
+	function getAllUserName()
+	{
+		$conn=databaseConnect();	
+	
+		$sql = "SELECT user_id FROM UserMasterRecord";
+		$result = $conn->query($sql);
+		$stack = array();
+	
+
+		if ($result->num_rows > 0) {
+	
+			while($row = $result->fetch_assoc()) {
+				$data=$row["user_id"];
+				array_push($stack,$data);		
+			}
+		
+			$conn->close();	
+			echo $stack;
+		} 
+		else {
+			echo "0 results";
+		}
+	}
+	function updateUser()
+	{
+		
+	}
+	function validateUser($userName,$password)
+	{
+		$conn=databaseConnect();	
+	
+		$sql = "SELECT user_id,password FROM UserMasterRecord where user_id='"+$userName+"'";
+		$result = $conn->query($sql);
+	
+
+		if ($result->num_rows > 0) {
+	
+			while($row = $result->fetch_assoc()) {
+				if($row["password"]==$password)
+					return 1;		
+			}
+			return 1;
+		} 
+		else {
+			return -1;
+		}
+	}
 	$user=new User();
 	
 	$user->setRegistrationNumber($_POST["registration_number"]);
@@ -119,29 +212,29 @@
 	$user->setUserId($_POST["user_id"]);
 	$user->setPassword($_POST["password"]);
 	
-	createUser($user);
 	
-	$conn=databaseConnect();	
-	
-	$sql = "SELECT * FROM Product";
-	$result = $conn->query($sql);
-	$stack = array();
-	
-
-	if ($result->num_rows > 0) {
-	
-		while($row = $result->fetch_assoc()) {
-			$data=$row["Name"]."+".$row["Type"]."+".$row["Description"]."+".$row["Price"]."+".$row["Tax"]."+".$row["ImagePath"];
-			array_push($stack,$data);		
-		}
-		
-		$conn->close();	
-		echo $stack;
-	} 
-	else {
-		echo "0 results";
-        }
+	$action=$_POST["operation"];
+	if($action=="createUser")
+	{
+		createUser($user);	
+	}
+	elseif($action=="listUser")
+	{
+		listUser();
+	}
+	elseif($action=="allUserName")
+	{
+		getAllUserName();
+	}	
+	elseif($action=="updateUser")
+	{
+		updateUser();
+	}
+	elseif($action=="validateUser")
+	{
+		$ret=validateUser($user->getUserId(),$user->getPassword());
+		echo $ret;
+	}	
 	
 
 ?>
-
